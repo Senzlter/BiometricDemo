@@ -3,6 +3,7 @@ package com.example.biometricdemo
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import com.epson.epos2.Epos2Exception
 import com.epson.epos2.printer.Printer
 import com.epson.epos2.printer.PrinterStatusInfo
@@ -180,10 +181,35 @@ class CPrinterCommand(
         oC_Printer?.addText("\n")
     }
 
-    fun C_ADDxAddLine() {
+    fun C_ADDxAddColumnLine(ptFirstColumn: String, paArray: ArrayList<String>) {
+        var tText = if (ptFirstColumn.length > 10) ptFirstColumn.substring(0, 10)
+        else ptFirstColumn + C_GETtGetCharacter(10 - ptFirstColumn.length, ' ')
+
+        var nMaxCharLength = 0
+        for (tItem in paArray) {
+            if (tItem.length > nMaxCharLength) {
+                nMaxCharLength = tItem.length
+            }
+        }
+        var nColsLength = (nMaxCharLength + 1) * paArray.size
+
+        tText += C_GETtGetCharacter(nC_DefaultLength - (10 + nColsLength), ' ')
+
+        for (tItem in paArray) {
+            tText += ' '
+            tText += tItem
+        }
+
+        oC_Printer?.addTextAlign(Printer.ALIGN_LEFT)
+        oC_Printer?.addTextSize(nC_DefaultSize, nC_DefaultSize)
+        oC_Printer?.addTextFont(nC_DefaultFont)
+        oC_Printer?.addText("$tText\n")
+    }
+
+    fun C_ADDxAddUnderLine(ptChar: Char) {
         oC_Printer?.addTextAlign(Printer.ALIGN_CENTER)
         oC_Printer?.addTextSize(nC_DefaultSize, nC_DefaultSize)
-        oC_Printer?.addText("\n" + C_GETtGetCharacter(nC_DefaultLength, '-') + "\n")
+        oC_Printer?.addText("\n" + C_GETtGetCharacter(nC_DefaultLength, ptChar) + "\n")
     }
 
     fun C_ADDxAddCut() {
@@ -240,7 +266,7 @@ class CPrinterCommand(
         return true
     }
 
-    private fun C_SETxDisconnectPrinter() {
+    fun C_SETxDisconnectPrinter() {
         if (oC_Printer == null) {
             return
         }
@@ -329,10 +355,12 @@ class CPrinterCommand(
 
     private fun C_GETtGetCharacter(pnChar: Int, ptChar: Char): String {
         var tTemp = ""
-        if (pnChar >= 0){
-        for (x in 0..pnChar) {
-            tTemp += ptChar
-        }}else{}
+        if (pnChar >= 0) {
+            for (x in 0..pnChar) {
+                tTemp += ptChar
+            }
+        } else {
+        }
         return tTemp
     }
 
@@ -350,9 +378,9 @@ class CPrinterCommand(
         })
     }
 
-    fun Bitmap.resizeByWidth(width:Int, height: Int):Bitmap{
-        val ratio:Float = this.width.toFloat() / this.height.toFloat()
-        val height:Int = Math.round(width / ratio)
+    fun Bitmap.resizeByWidth(width: Int, height: Int): Bitmap {
+        val ratio: Float = this.width.toFloat() / this.height.toFloat()
+        val height: Int = Math.round(width / ratio)
 
         return Bitmap.createScaledBitmap(
             this,
@@ -362,9 +390,9 @@ class CPrinterCommand(
         )
     }
 
-    fun Bitmap.resizeByHeight(height:Int):Bitmap{
-        val ratio:Float = this.height.toFloat() / this.width.toFloat()
-        val width:Int = Math.round(height / ratio)
+    fun Bitmap.resizeByHeight(height: Int): Bitmap {
+        val ratio: Float = this.height.toFloat() / this.width.toFloat()
+        val width: Int = Math.round(height / ratio)
 
         return Bitmap.createScaledBitmap(
             this,

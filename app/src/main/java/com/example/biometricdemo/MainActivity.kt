@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity(), CAdjust.CmlAdajustListener {
             if (oC_Printer != null){
                 oC_Printer.C_SETbConnectPrinter()
                 oC_Printer.C_ADDxAddSingleLine("test single line and test printer")
-                oC_Printer.C_ADDxAddSingleLine("Test Single line with aline and size", Printer.ALIGN_RIGHT, 2)
-                oC_Printer.C_ADDxAddLine()
+                /*oC_Printer.C_ADDxAddSingleLine("Test Single line with aline and size", Printer.ALIGN_RIGHT, 2)
+                oC_Printer.C_ADDxAddUnderLine('=')
                 oC_Printer.C_ADDxAddOrder("order 1 try to write over limit", 10.12345,"Bath" )
                 oC_Printer.C_ADDxAddOrder("order 2", 10.12345,"Bath" )
                 oC_Printer.C_ADDxAddOrder("order 3 try to write limit", 10.12345,"Bath" )
@@ -60,8 +60,11 @@ class MainActivity : AppCompatActivity(), CAdjust.CmlAdajustListener {
                 oC_Printer.C_ADDxAddBitmap(x,2, Printer.ALIGN_RIGHT)
                 oC_Printer.C_ADDxAddBarcode("12345", Printer.BARCODE_CODE39, Printer.HRI_BOTH, Printer.FONT_A, 2, 100)
                 oC_Printer.C_ADDxAddBarcode(Printer.ALIGN_RIGHT,"12345123", Printer.BARCODE_CODE39, Printer.HRI_BOTH, Printer.FONT_A, 2, 100)
+*/
+                oC_Printer.C_ADDxAddColumnLine("123456789012345", arrayListOf("10", "20", "3123"))
                 oC_Printer.C_ADDxAddCut()
                 oC_Printer.C_PRCbPrintData()
+                oC_Printer.C_SETxDisconnectPrinter()
             }
         }
 
