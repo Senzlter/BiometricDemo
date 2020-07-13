@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ButtonStyle,ContentDescription"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TableLayout
+        android:id="@+id/otlCNNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginBottom="1dp"
+        tools:ignore="UselessParent" >
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/ocmCNKey1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key1" />
+
+            <Button
+                android:id="@+id/ocmCNKey2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key2" />
+
+            <Button
+                android:id="@+id/ocmCNKey3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key3" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp">
+
+            <Button
+                android:id="@+id/ocmCNKey4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key4" />
+
+            <Button
+                android:id="@+id/ocmCNKey5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key5" />
+
+            <Button
+                android:id="@+id/ocmCNKey6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key6" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp">
+            <Button
+                android:id="@+id/ocmCNKey7"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key7" />
+
+            <Button
+                android:id="@+id/ocmCNKey8"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key8" />
+
+            <Button
+                android:id="@+id/ocmCNKey9"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key9" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp">
+
+            <Button
+                android:id="@+id/ocmCNPoint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_KeyPoint" />
+
+            <Button
+                android:id="@+id/ocmCNKey0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="1dp"
+                android:layout_marginEnd="1dp"
+                android:background="@drawable/wcn_ripple_effect"
+                android:textColor="@color/white"
+                android:text="@string/tCN_Key0" />
+
+
+            <ImageButton
+                android:id="@+id/oibCNKeyBackspace"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/wcn_ripple_effect"
+                app:srcCompat="@drawable/pcn_dark_action_backspace" />
+
+        </TableRow>
+    </TableLayout>
+
+</RelativeLayout>

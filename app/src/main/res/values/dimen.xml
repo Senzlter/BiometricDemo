@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dimen_Margins100">100dp</dimen>
+    <dimen name="dimen_Margins20">20dp</dimen>
+    <dimen name="dimen_Margins16">16dp</dimen>
+    <dimen name="dimen_Margins10">10dp</dimen>
+    <dimen name="dimen_Margins8">8dp</dimen>
+    <dimen name="dimen_Margins5">5dp</dimen>
+    <dimen name="dimen_Margins24">24dp</dimen>
+    <dimen name="dimen_Button65">65dp</dimen>
+    <dimen name="dimen_Padding10">10dp</dimen>
+    <dimen name="dimen_Pic200">200dp</dimen>
+    <dimen name="dimen_Pic140">140dp</dimen>
+    <dimen name="dimen_NumPad">65dp</dimen>
+
+
+    <dimen name="text_size_normal">18sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_large">28sp</dimen>
+    <dimen name="text_size_medium">24sp</dimen>
+    <dimen name="text_size_extra_small">10sp</dimen>
+
+    <dimen name="tiny_elevation">4dp</dimen>
+    <dimen name="small_elevation">8dp</dimen>
+    <dimen name="medium_elevation">12dp</dimen>
+    <dimen name="large_elevation">16dp</dimen>
+
+    <dimen name="small_corner_radius">8dp</dimen>
+    <dimen name="medium_corner_radius">12dp</dimen>
+    <dimen name="large_corner_radius">16dp</dimen>
+
+    <dimen name="line_size_medium">1dp</dimen>
+    <dimen name="line_size_small">0.75dp</dimen>
+    <dimen name="line_size_large">1.5dp</dimen>
+
+    <dimen name="profile_image_dimen">140dp</dimen>
+    <dimen name="finger_print_text_size">16sp</dimen>
+    <dimen name="key_text_size">24sp</dimen>
+    <dimen name="key_stroke_width">2dp</dimen>
+    <dimen name="indicator_stroke_width">2dp</dimen>
+    <dimen name="indicator_radius">15dp</dimen>
+    <dimen name="key_padding">8dp</dimen>
+
+    <dimen name="pattern_cell_radius">5dp</dimen>
+
+    <dimen name="bankbtnsize">80dp</dimen>
+    <dimen name="fcr_margin_extra_large">36dp</dimen>
+
+</resources>

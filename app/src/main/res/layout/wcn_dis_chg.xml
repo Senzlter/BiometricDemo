@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <include layout="@layout/wcn_headbar"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_Button65"
+        android:layout_weight="0">
+
+        <TextView
+            android:id="@+id/otvCNValue_b4_Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_Margins10"
+            android:text="@string/t16value_b4chg"
+            app:layout_constraintBottom_toTopOf="@+id/oetCNValue_b4_Edit"
+            app:layout_constraintStart_toStartOf="@+id/oetCNValue_b4_Edit" />
+
+        <EditText
+            android:id="@+id/oetCNValue_b4_Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:layout_marginTop="@dimen/dimen_Button65"
+            android:enabled="false"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/otvCNValue_4_Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_Margins10"
+            android:text="@string/t16chg_percent"
+            app:layout_constraintStart_toStartOf="@+id/oetCNValue_b4_Edit"
+            app:layout_constraintTop_toBottomOf="@+id/oetCNValue_b4_Edit" />
+
+        <EditText
+            android:id="@+id/oetCNValue_4_Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_Margins10"
+            android:ems="10"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:inputType="number"
+            android:gravity="right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/otvCNValue_4_Edit" />
+
+        <TextView
+            android:id="@+id/otvCNValue_af_Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/t16value_afchg"
+            app:layout_constraintStart_toStartOf="@+id/oetCNValue_af_Edit"
+            app:layout_constraintTop_toBottomOf="@+id/oetCNValue_4_Edit" />
+
+        <EditText
+            android:id="@+id/oetCNValue_af_Edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_Margins10"
+            android:gravity="right"
+            android:enabled="false"
+            android:ems="10"
+            android:inputType="number"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/otvCNValue_af_Edit" />
+
+        <TextView
+            android:id="@+id/otvCNValue_4_Cal"
+            android:layout_width="200dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="8dp"
+            android:gravity="right"
+            android:text="Calculate Value"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/oetCNValue_4_Edit" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include layout="@layout/wcn_numpad" />
+
+</LinearLayout>

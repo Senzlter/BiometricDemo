@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <include layout="@layout/wcn_headbar"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_Button65"
+        android:layout_weight="0">
+
+        <TextView
+            android:id="@+id/otvCNLast_Value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_Margins10"
+            android:text="@string/t18last_price"
+            app:layout_constraintBottom_toTopOf="@+id/oetCNLast_Value"
+            app:layout_constraintStart_toStartOf="@+id/oetCNLast_Value" />
+
+        <EditText
+            android:id="@+id/oetCNLast_Value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_Button65"
+            android:ems="10"
+            android:inputType="number"
+            android:enabled="false"
+            android:gravity="right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/otvCNAdjust_To"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_Margins10"
+            android:text="@string/t18price_to"
+            app:layout_constraintStart_toStartOf="@+id/oetCNAdjust_To"
+            app:layout_constraintTop_toBottomOf="@+id/oetCNLast_Value" />
+
+        <EditText
+            android:id="@+id/oetCNAdjust_To"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_Margins10"
+            android:ems="10"
+            android:inputType="number"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:gravity="right"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/otvCNAdjust_To" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include layout="@layout/wcn_numpad" />
+
+</LinearLayout>
