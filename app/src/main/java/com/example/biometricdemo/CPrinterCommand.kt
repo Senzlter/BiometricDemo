@@ -1,19 +1,44 @@
 package com.example.biometricdemo
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.util.Log
+import android.os.Build
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.epson.epos2.Epos2Exception
 import com.epson.epos2.printer.Printer
 import com.epson.epos2.printer.PrinterStatusInfo
 import com.epson.epos2.printer.ReceiveListener
+import java.text.DecimalFormat
 
-class CPrinterCommand(
-    private val poPrinterSerial: String,
-    val poCon: Context,
-    var poAct: Activity
-) : ReceiveListener {
+class CPrinterCommand() : ReceiveListener {
+
+    private var poPrinterSerial: String? = null
+    private var poCon: Context? = null
+    private var poAct: Activity? = null
+
+
+    constructor(
+        poPassingCon: Context,
+        poPassingAct: Activity
+    ) : this() {
+        poCon = poPassingCon
+        poAct = poPassingAct
+    }
+
+    constructor(
+        poPassingPrinterSerial: String,
+        poPassingCon: Context,
+        poPassingAct: Activity
+    ) : this() {
+        poPrinterSerial = poPassingPrinterSerial
+        poCon = poPassingCon
+        poAct = poPassingAct
+    }
+
 
     private val REQUEST_PERMISSION = 100
     private val DISCONNECT_INTERVAL = 500
@@ -21,9 +46,9 @@ class CPrinterCommand(
 
     private var oC_Printer: Printer? = null
     private var nC_DefaultAlign = Printer.ALIGN_CENTER
-    private var nC_DefaultFont = Printer.FONT_A
+    private var nC_DefaultFont = Printer.FONT_B
     private var nC_DefaultSize = 1
-    private var nC_DefaultLength = 32
+    private var nC_DefaultLength = 42
 
 
     fun C_PRCbPrintData(): Boolean {
@@ -53,8 +78,12 @@ class CPrinterCommand(
     }
 
     fun C_ADDxAddSingleLine(ptText: String) {
+        var nVowel = C_GETnGetNumberOfThaiChar(ptText)
         var tOrder =
-            if (ptText.length > nC_DefaultLength) ptText.substring(0, nC_DefaultLength) else ptText
+            if (ptText.length > nC_DefaultLength + nVowel) ptText.substring(
+                0,
+                nC_DefaultLength + nVowel
+            ) else ptText
 
         oC_Printer?.addTextFont(nC_DefaultFont)
         oC_Printer?.addTextAlign(nC_DefaultAlign)
@@ -63,9 +92,11 @@ class CPrinterCommand(
     }
 
     fun C_ADDxAddSingleLine(ptText: String, pnAlign: Int, pnSize: Int) {
-        var tOrder = if (ptText.length > nC_DefaultLength / pnSize) ptText.substring(
+        var nVowel = C_GETnGetNumberOfThaiChar(ptText)
+
+        var tOrder = if (ptText.length > (nC_DefaultLength + nVowel) / pnSize) ptText.substring(
             0,
-            nC_DefaultLength / pnSize
+            (nC_DefaultLength + nVowel) / pnSize
         ) else ptText
 
         oC_Printer?.addTextFont(nC_DefaultFont)
@@ -74,22 +105,22 @@ class CPrinterCommand(
         oC_Printer?.addText("$tOrder\n")
     }
 
-    fun C_ADDxAddOrder(ptOrder: String, pnValue: Double, ptCurNme: String) {
-        var nMaxLength = nC_DefaultLength
+    fun C_ADDxAddLR(ptLeft: String, ptRight: String) {
+        var tText = ""
+        var tLeft = if (ptLeft.length > nC_DefaultLength / 2) ptLeft.substring(
+            0,
+            (nC_DefaultLength / 2) - 1
+        )
+        else ptLeft
+        var tRight = if (ptRight.length > nC_DefaultLength / 2) ptRight.substring(
+            0,
+            (nC_DefaultLength / 2) - 1
+        )
+        else ptRight
 
-        var tValue = String.format("%.2f", pnValue)
-        var tCurNme = ptCurNme[0]
+        var nSpec = nC_DefaultLength - (tLeft.length + tRight.length)
+        tText += tLeft + C_GETtGetCharacter(nSpec - 1, ' ') + tRight
 
-        var nMaxOrderLength = (nMaxLength - (tValue.length + 3))
-        var tOrder =
-            if (ptOrder.length > nMaxOrderLength)
-                ptOrder.substring(0, nMaxOrderLength)
-            else ptOrder
-
-        var tText = "$tOrder${C_GETtGetCharacter(
-            nMaxLength - (tOrder.length + tValue.length + 3)
-            , ' '
-        )} $tValue$tCurNme"
 
         oC_Printer?.addTextAlign(Printer.ALIGN_CENTER)
         oC_Printer?.addTextSize(nC_DefaultSize, nC_DefaultSize)
@@ -97,17 +128,147 @@ class CPrinterCommand(
         oC_Printer?.addText("$tText\n")
     }
 
-    fun C_ADDxAddOrder(ptOrder: String, pnValue: Double, ptCurNme: String, pnSize: Int) {
-        var nMaxLength = (nC_DefaultLength / pnSize) - 1
+    fun C_ADDxAddLR(ptLeft: String, ptRight: String, pnNumRight: Int) {
+        var tText = ""
+        var tLeft = if (ptLeft.length > nC_DefaultLength - pnNumRight) ptLeft.substring(
+            0,
+            (nC_DefaultLength - pnNumRight) - 1
+        )
+        else ptLeft
+        var tRight = if (ptRight.length > -pnNumRight) ptRight.substring(0, pnNumRight)
+        else ptRight
 
-        var tValue = String.format("%.2f", pnValue)
-        var tCurNme = ptCurNme[0]
+        var nSpec = nC_DefaultLength - (tLeft.length + tRight.length)
+        tText += tLeft + C_GETtGetCharacter(nSpec - 1, ' ') + tRight
 
-        var nMaxOrderLength = (nMaxLength - (tValue.length + 2))
+
+        oC_Printer?.addTextAlign(Printer.ALIGN_CENTER)
+        oC_Printer?.addTextSize(nC_DefaultSize, nC_DefaultSize)
+        oC_Printer?.addTextFont(nC_DefaultFont)
+        oC_Printer?.addText("$tText\n")
+    }
+
+    fun C_ADDxAddOrderCol(tText1st: String, tText2nd: String, tText3rd: String) {
+        var tText = ""
+        var oPrinterLA = CmlPrinterLA()
+
+
+        var tText1 = if (tText1st.length > oPrinterLA.nLengthCol1st + C_GETnGetNumberOfThaiChar(tText1st))
+            tText1st.substring(0, oPrinterLA.nLengthCol1st + C_GETnGetNumberOfThaiChar(tText1st))
+        else tText1st + C_GETtGetCharacter((oPrinterLA.nLengthCol1st + C_GETnGetNumberOfThaiChar(tText1st)) - tText1st.length, ' ')
+
+        var tText2 = if (tText2nd.length > oPrinterLA.nLengthCol2nd + C_GETnGetNumberOfThaiChar(tText2nd))
+            tText2nd.substring(0, oPrinterLA.nLengthCol2nd + C_GETnGetNumberOfThaiChar(tText2nd))
+        else tText2nd + C_GETtGetCharacter((oPrinterLA.nLengthCol2nd + C_GETnGetNumberOfThaiChar(tText2nd)) - tText2nd.length, ' ')
+
+        var tText3 = if (tText3rd.length > oPrinterLA.nLengthCol3rd + C_GETnGetNumberOfThaiChar(tText3rd))
+            tText3rd.substring(0, oPrinterLA.nLengthCol3rd + C_GETnGetNumberOfThaiChar(tText3rd))
+        else tText3rd + C_GETtGetCharacter((oPrinterLA.nLengthCol3rd + C_GETnGetNumberOfThaiChar(tText3rd)) - tText3rd.length, ' ')
+
+        tText += "$tText1 $tText2 $tText3"
+
+        oC_Printer?.addTextAlign(Printer.ALIGN_LEFT)
+        oC_Printer?.addTextSize(nC_DefaultSize, nC_DefaultSize)
+        oC_Printer?.addTextFont(nC_DefaultFont)
+        oC_Printer?.addText("$tText\n")
+    }
+
+    fun C_ADDxAddOrderCol(
+        tText1st: String,
+        tText2nd: String,
+        tText3rd: String,
+        poPrinterLA: CmlPrinterLA
+    ) {
+        var tText = ""
+        var oPrinterLA = poPrinterLA
+
+        var tText1 = if (tText1st.length > oPrinterLA.nLengthCol1st + C_GETnGetNumberOfThaiChar(tText1st))
+            tText1st.substring(0, oPrinterLA.nLengthCol1st + C_GETnGetNumberOfThaiChar(tText1st))
+        else {
+            when (oPrinterLA.nAlignCol1st) {
+                Printer.ALIGN_RIGHT ->   C_GETtGetCharacter((oPrinterLA.nLengthCol1st + C_GETnGetNumberOfThaiChar(tText1st)) - tText1st.length, ' ') + tText1st
+                Printer.ALIGN_LEFT ->    tText1st + C_GETtGetCharacter((oPrinterLA.nLengthCol1st + C_GETnGetNumberOfThaiChar(tText1st)) - tText1st.length, ' ')
+                else ->                  tText1st + C_GETtGetCharacter((oPrinterLA.nLengthCol1st + C_GETnGetNumberOfThaiChar(tText1st)) - tText1st.length, ' ')
+            }
+        }
+
+        var tText2 = if (tText2nd.length > oPrinterLA.nLengthCol2nd + C_GETnGetNumberOfThaiChar(tText2nd))
+            tText2nd.substring(0, oPrinterLA.nLengthCol2nd + C_GETnGetNumberOfThaiChar(tText2nd))
+        else {
+            when (oPrinterLA.nAlignCol2nd) {
+                Printer.ALIGN_RIGHT ->   C_GETtGetCharacter((oPrinterLA.nLengthCol2nd + C_GETnGetNumberOfThaiChar(tText2nd)) - tText2nd.length, ' ') + tText2nd
+                Printer.ALIGN_LEFT ->    tText2nd + C_GETtGetCharacter((oPrinterLA.nLengthCol2nd + C_GETnGetNumberOfThaiChar(tText2nd)) - tText2nd.length, ' ')
+                else ->                  tText2nd + C_GETtGetCharacter((oPrinterLA.nLengthCol2nd + C_GETnGetNumberOfThaiChar(tText2nd)) - tText2nd.length, ' ')
+            }
+        }
+
+        var tText3 = if (tText3rd.length > oPrinterLA.nLengthCol3rd + C_GETnGetNumberOfThaiChar(tText3rd))
+            tText3rd.substring(0, oPrinterLA.nLengthCol3rd + C_GETnGetNumberOfThaiChar(tText3rd))
+        else {
+            when (oPrinterLA.nAlignCol3rd) {
+                Printer.ALIGN_RIGHT ->  C_GETtGetCharacter((oPrinterLA.nLengthCol3rd + C_GETnGetNumberOfThaiChar(tText3rd)) - tText3rd.length, ' ') + tText3rd
+                Printer.ALIGN_LEFT ->   tText3rd + C_GETtGetCharacter((oPrinterLA.nLengthCol3rd + C_GETnGetNumberOfThaiChar(tText3rd)) - tText3rd.length,' ')
+                else ->                 tText3rd + C_GETtGetCharacter((oPrinterLA.nLengthCol3rd + C_GETnGetNumberOfThaiChar(tText3rd)) - tText3rd.length,' ')
+
+            }
+        }
+
+        tText += "$tText1 $tText2 $tText3"
+
+        oC_Printer?.addTextAlign(Printer.ALIGN_LEFT)
+        oC_Printer?.addTextSize(nC_DefaultSize, nC_DefaultSize)
+        oC_Printer?.addTextFont(nC_DefaultFont)
+        oC_Printer?.addText("$tText\n")
+    }
+
+    fun C_ADDxAddOrder(ptOrder: String, pnValue: Double, ptCurNme: String) {
+        var nVowel = C_GETnGetNumberOfThaiChar(ptOrder)
+        var nMaxLength = nC_DefaultLength + nVowel
+
+        var tValue = C_GETtCurForm(pnValue)
+        var tCurNme = if (ptCurNme.isNotEmpty()) ptCurNme[0] else ""
+
+        var nMaxOrderLength = (nMaxLength - (tValue?.length?.plus(2))!!)
         var tOrder =
-            if (ptOrder.length > nMaxOrderLength)
-                ptOrder.substring(0, nMaxOrderLength)
-            else ptOrder
+            if (ptOrder.length > nMaxOrderLength) {
+                var nTemp = C_GETnGetNumberOfThaiChar(
+                    ptOrder.substring(
+                        nMaxOrderLength - 1,
+                        ptOrder.length
+                    )
+                )
+                ptOrder.substring(0, nMaxOrderLength - nTemp)
+            } else ptOrder
+
+        var tText = "$tOrder${C_GETtGetCharacter(
+            nMaxLength - (tOrder.length + tValue.length + 2)
+            , ' '
+        )} $tValue$tCurNme"
+
+        oC_Printer?.addTextAlign(Printer.ALIGN_LEFT)
+        oC_Printer?.addTextSize(nC_DefaultSize, nC_DefaultSize)
+        oC_Printer?.addTextFont(nC_DefaultFont)
+        oC_Printer?.addText("$tText\n")
+    }
+
+    fun C_ADDxAddOrder(ptOrder: String, pnValue: Double, ptCurNme: String, pnSize: Int) {
+        var nVowel = C_GETnGetNumberOfThaiChar(ptOrder)
+        var nMaxLength = ((nC_DefaultLength / pnSize) - 1) + nVowel
+
+        var tValue = C_GETtCurForm(pnValue)
+        var tCurNme = if (ptCurNme.isNotEmpty()) ptCurNme[0] else ""
+
+        var nMaxOrderLength = (nMaxLength - (tValue?.length?.plus(2))!!)
+        var tOrder =
+            if (ptOrder.length > nMaxOrderLength) {
+                var nTemp = C_GETnGetNumberOfThaiChar(
+                    ptOrder.substring(
+                        nMaxOrderLength - 1,
+                        ptOrder.length
+                    )
+                )
+                ptOrder.substring(0, nMaxOrderLength - nTemp)
+            } else ptOrder
 
         var tText = "$tOrder${C_GETtGetCharacter(
             nMaxLength - (tOrder.length + tValue.length + 2)
@@ -181,23 +342,19 @@ class CPrinterCommand(
         oC_Printer?.addText("\n")
     }
 
-    fun C_ADDxAddColumnLine(ptFirstColumn: String, paArray: ArrayList<String>) {
-        var tText = if (ptFirstColumn.length > 10) ptFirstColumn.substring(0, 10)
-        else ptFirstColumn + C_GETtGetCharacter(10 - ptFirstColumn.length, ' ')
-
-        var nMaxCharLength = 0
-        for (tItem in paArray) {
-            if (tItem.length > nMaxCharLength) {
-                nMaxCharLength = tItem.length
-            }
-        }
-        var nColsLength = (nMaxCharLength + 1) * paArray.size
-
-        tText += C_GETtGetCharacter(nC_DefaultLength - (10 + nColsLength), ' ')
+    fun C_ADDxAddColumnLine(paArray: ArrayList<String>) {
+        var tText = ""
+        var nMaxColLength = nC_DefaultLength / paArray.size
 
         for (tItem in paArray) {
-            tText += ' '
-            tText += tItem
+            var nColLength = nMaxColLength + C_GETnGetNumberOfThaiChar(tItem) - 1
+            tText += if (tItem.length > nColLength) tItem.substring(0, nColLength)
+            else tItem
+            tText += C_GETtGetCharacter(
+                if (tItem.length > nColLength) 0
+                else nColLength - tItem.length
+                , ' '
+            )
         }
 
         oC_Printer?.addTextAlign(Printer.ALIGN_LEFT)
@@ -209,7 +366,7 @@ class CPrinterCommand(
     fun C_ADDxAddUnderLine(ptChar: Char) {
         oC_Printer?.addTextAlign(Printer.ALIGN_CENTER)
         oC_Printer?.addTextSize(nC_DefaultSize, nC_DefaultSize)
-        oC_Printer?.addText("\n" + C_GETtGetCharacter(nC_DefaultLength, ptChar) + "\n")
+        oC_Printer?.addText("\n" + C_GETtGetCharacter(nC_DefaultLength - 1, ptChar) + "\n")
     }
 
     fun C_ADDxAddCut() {
@@ -282,7 +439,7 @@ class CPrinterCommand(
                         } catch (ex: Exception) {
                         }
                     } else {
-                        poAct.runOnUiThread(Runnable {
+                        poAct?.runOnUiThread(Runnable {
                             CShowMsg.showException(
                                 poe,
                                 "disconnect",
@@ -292,7 +449,7 @@ class CPrinterCommand(
                         break
                     }
                 } else {
-                    poAct.runOnUiThread(Runnable {
+                    poAct?.runOnUiThread(Runnable {
                         CShowMsg.showException(
                             poe,
                             "disconnect",
@@ -364,13 +521,28 @@ class CPrinterCommand(
         return tTemp
     }
 
+    private fun C_GETnGetNumberOfThaiChar(ptText: String): Int {
+        var nVowel = 0
+        var atVowel = arrayOf('ุ', 'ู', 'ิ', 'ื', '์', '่', '้', '๊', '๋', '็', 'ี', 'ั', 'ฺ', 'ึ')
+        for (tTemp in ptText) {
+            if (atVowel.contains(tTemp))
+                nVowel++
+        }
+        return nVowel
+    }
+
+    private fun C_GETtCurForm(pnNum: Double): String? {
+        val oFormatter = DecimalFormat("###,###,###.00")
+        return oFormatter.format(pnNum)
+    }
+
     override fun onPtrReceive(
         poPrinter: Printer?,
         pnCode: Int,
         poStatus: PrinterStatusInfo?,
         ptJobId: String?
     ) {
-        poAct.runOnUiThread(Runnable {
+        poAct?.runOnUiThread(Runnable {
             CShowMsg.showResult(pnCode, poStatus?.let { C_SETtMakeErrorMessage(it) }, poCon)
             Thread(Runnable {
                 C_SETxDisconnectPrinter()
@@ -378,7 +550,35 @@ class CPrinterCommand(
         })
     }
 
-    fun Bitmap.resizeByWidth(width: Int, height: Int): Bitmap {
+    fun requestRuntimePermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return
+        }
+        val permissionStorage: Int = ContextCompat.checkSelfPermission(
+            poCon!!,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        val permissionLocation: Int = ContextCompat.checkSelfPermission(
+            poCon!!,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+        val requestPermissions: MutableList<String> =
+            java.util.ArrayList()
+        if (permissionStorage == PackageManager.PERMISSION_DENIED) {
+            requestPermissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        }
+        if (permissionLocation == PackageManager.PERMISSION_DENIED) {
+            requestPermissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+        if (!requestPermissions.isEmpty()) {
+            ActivityCompat.requestPermissions(
+                poAct!!,
+                requestPermissions.toTypedArray(), 100
+            )
+        }
+    }
+
+    fun Bitmap.resizeByWidth(width: Int): Bitmap {
         val ratio: Float = this.width.toFloat() / this.height.toFloat()
         val height: Int = Math.round(width / ratio)
 
